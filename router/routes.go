@@ -2,23 +2,20 @@ package router
 
 import (
 	"go/postgres-go/middleware"
-	"net/http"
 
-	"github.com/goccy/go-json"
 	"github.com/gorilla/mux"
 )
 
-func HelloMessage(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode("server up")
-}
-
+// Router is exported and used in main.go
 func Router() *mux.Router {
+
 	router := mux.NewRouter()
-	router.HandleFunc("/api", HelloMessage).Methods("GET")
-	router.HandleFunc("/api/stock/{id}", middleware.GetStock).Methods("GET")
-	router.HandleFunc("/api/stock", middleware.GetALLStock).Methods("GET")
-	router.HandleFunc("/api/newstock", middleware.CreateStock).Methods("POST")
-	router.HandleFunc("/api/stock/{id}", middleware.UpdateStock).Methods("PUT")
-	router.HandleFunc("/api/delete/{id}", middleware.DeleteStock).Methods("DELETE")
+
+	router.HandleFunc("/api/stock/{id}", middleware.GetStock).Methods("GET", "OPTIONS")
+	router.HandleFunc("/api/stock", middleware.GetAllStock).Methods("GET", "OPTIONS")
+	router.HandleFunc("/api/newstock", middleware.CreateStock).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/stock/{id}", middleware.UpdateStock).Methods("PUT", "OPTIONS")
+	router.HandleFunc("/api/deletestock/{id}", middleware.DeleteStock).Methods("DELETE", "OPTIONS")
+
 	return router
 }
